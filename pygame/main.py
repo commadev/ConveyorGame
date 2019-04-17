@@ -16,27 +16,14 @@ for i in range(8):
     else:
         item.append(Item(i, "Notebook", [MAP_HEIGHT-1, i-4]))
 
-index = 0
 item_length = 8
+index = 0
 
-clock = pygame.time.Clock()
-while True:
-    clock.tick(60)
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            sys.exit()
-    
-    print_map = copy.deepcopy(map)
-    for i in range(8):
-        if item[i].gole == False:
-            print_map[item[i].pos[0]][item[i].pos[1]] = item[i]
-    
-    key_event = pygame.key.get_pressed()
-    x = item[index].pos[1]
-    y = item[index].pos[0]
+def move(key_event):
+    global index
     if key_event[pygame.K_LEFT]:
-        if x > 0:
-            if print_map[y][x - 1] == 0:
+        if item[index].pos[1] > 0:
+            if print_map[item[index].pos[0]][item[index].pos[1] - 1] == 0:
                 item[index].pos[1] -= 1
             elif print_map[item[index].pos[0]][item[index].pos[1] - 1] == item[index].get_des():
                 item[index].gole = True
@@ -98,8 +85,7 @@ while True:
         if index > item_length - 1:
             index = 0
 
-    screen.fill(BLACK)
-
+def draw_screen():
     for i in range(MAP_HEIGHT):
         for j in range(MAP_WIDTH):
             if map[i][j] == 1:
@@ -123,5 +109,24 @@ while True:
                 pygame.draw.rect(screen, BLUE, [item[i].pos[1]*RECT_SIZE, item[i].pos[0]*RECT_SIZE, RECT_SIZE, RECT_SIZE], 0)
             elif item[i].des == 4:
                 pygame.draw.rect(screen, YELLOW, [item[i].pos[1]*RECT_SIZE, item[i].pos[0]*RECT_SIZE, RECT_SIZE, RECT_SIZE], 0)
+
+clock = pygame.time.Clock()
+while True:
+    clock.tick(60)
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            sys.exit()
+    
+    print_map = copy.deepcopy(map)
+    for i in range(8):
+        if item[i].gole == False:
+            print_map[item[i].pos[0]][item[i].pos[1]] = item[i]
+    
+    key_event = pygame.key.get_pressed()
+    move(key_event)
+
+    screen.fill(BLACK)
+
+    draw_screen()
         
     pygame.display.update()
