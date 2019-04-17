@@ -32,9 +32,11 @@ while True:
             print_map[item[i].pos[0]][item[i].pos[1]] = item[i]
     
     key_event = pygame.key.get_pressed()
+    x = item[index].pos[1]
+    y = item[index].pos[0]
     if key_event[pygame.K_LEFT]:
-        if item[index].pos[1] > 0:
-            if print_map[item[index].pos[0]][item[index].pos[1] - 1] == 0:
+        if x > 0:
+            if print_map[y][x - 1] == 0:
                 item[index].pos[1] -= 1
             elif print_map[item[index].pos[0]][item[index].pos[1] - 1] == item[index].get_des():
                 item[index].gole = True
