@@ -9,81 +9,70 @@ pygame.display.set_caption("Conveyor Game")
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 item = []
-
-for i in range(8):
-    if i < 4:
-        item.append(Item(i, "Notebook", [MAP_HEIGHT-2, i]))
-    else:
-        item.append(Item(i, "Notebook", [MAP_HEIGHT-1, i-4]))
-
-item_length = 8
 index = 0
+max_index = 8
+remain_item = 0
+print_map = []
+
+def item_init():
+    global item
+    item = []
+    for i in range(8):
+        if i < 4:
+            item.append(Item(i, "Notebook", [MAP_HEIGHT-2, i]))
+        else:
+            item.append(Item(i, "Notebook", [MAP_HEIGHT-1, i-4]))
+
+def index_up():
+    global index
+    index += 1
+    if index > max_index - 1:
+        index = 0
 
 def move(key_event):
-    global index
+    global max_index
+    global remain_item
+    if item[index].gole == True:
+        index_up()
+    
     if key_event[pygame.K_LEFT]:
         if item[index].pos[1] > 0:
             if print_map[item[index].pos[0]][item[index].pos[1] - 1] == 0:
                 item[index].pos[1] -= 1
-            elif print_map[item[index].pos[0]][item[index].pos[1] - 1] == item[index].get_des():
-                item[index].gole = True
-                for i in range(8):
-                    if item[i].number > item[index].number:
-                        item[i].number -= 1
-                item[index].number = -1
         else:
             item[index].aging()
-        index += 1
-        if index > item_length - 1:
-            index = 0
+        index_up()
 
     if key_event[pygame.K_RIGHT]:
         if item[index].pos[1] < MAP_WIDTH - 1:
             if print_map[item[index].pos[0]][item[index].pos[1] + 1] == 0:
                 item[index].pos[1] += 1
-            elif print_map[item[index].pos[0]][item[index].pos[1] + 1] == item[index].get_des():
-                item[index].gole = True
-                for i in range(8):
-                    if item[i].number > item[index].number:
-                        item[i].number -= 1
-                item[index].number = -1
         else:
             item[index].aging()
-        index += 1
-        if index > item_length - 1:
-            index = 0
+        index_up()
     
     if key_event[pygame.K_UP]:
         if item[index].pos[0] > 0:
             if print_map[item[index].pos[0] - 1][item[index].pos[1]] == 0:
                 item[index].pos[0] -= 1
-            elif print_map[item[index].pos[0] - 1][item[index].pos[1]] == item[index].get_des():
+            elif print_map[item[index].pos[0] - 1][item[index].pos[1]] == item[index].get_des() and item[index].gole == False:
                 item[index].gole = True
+                remain_item -= 1
                 for i in range(8):
                     if item[i].number > item[index].number:
                         item[i].number -= 1
                 item[index].number = -1
         else:
             item[index].aging()
-        index += 1
-        if index > item_length - 1:
-            index = 0
+        index_up()
 
     if key_event[pygame.K_DOWN]:
         if item[index].pos[0] < MAP_HEIGHT - 1:
             if print_map[item[index].pos[0] + 1][item[index].pos[1]] == 0:
                 item[index].pos[0] += 1
-            elif print_map[item[index].pos[0] + 1][item[index].pos[1]] == item[index].get_des():
-                item[index].gole = True
-                for i in range(8):
-                    if item[i].number > item[index].number:
-                        item[i].number -= 1
-                item[index].number = -1
         else:
             item[index].aging()
-        index += 1
-        if index > item_length - 1:
-            index = 0
+        index_up()
 
 def draw_screen():
     for i in range(MAP_HEIGHT):
@@ -113,6 +102,11 @@ def draw_screen():
 clock = pygame.time.Clock()
 while True:
     clock.tick(60)
+
+    if remain_item <= 0:
+        item_init()
+        remain_item = 8
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
