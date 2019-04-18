@@ -8,6 +8,7 @@ map = [
     [0, 0, 0, 0],
     [0, 0, 0, 0],
     [0, 0, 0, 0],
+    [0, 0, 0, 0],
     [0, 0, 0, 0]
 ]
 
@@ -16,7 +17,7 @@ MAP_WIDTH = len(map[0])
 
 SCREEN_WIDTH = 320
 SCREEN_HEIGHT = 480
-RECT_SIZE = 28
+RECT_SIZE = 30
 
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
