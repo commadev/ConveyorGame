@@ -35,8 +35,8 @@ def move(key_event):
     global remain_item
 
     if item[index].gole == True:
-        index_up()
-        return
+        while not item[index].gole:
+            index_up()
     
     if key_event[pygame.K_LEFT]:
         if item[index].pos[1] > 0:
