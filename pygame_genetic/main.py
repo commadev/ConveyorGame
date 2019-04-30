@@ -3,6 +3,7 @@ from model.variable import *
 import pygame
 import sys
 import copy
+import random
 
 pygame.init()
 pygame.display.set_caption("Conveyor Game")
@@ -35,6 +36,7 @@ def move(key_event):
 
     if item[index].gole == True:
         index_up()
+        return
     
     if key_event[pygame.K_LEFT]:
         if item[index].pos[1] > 0:
@@ -76,10 +78,26 @@ def move(key_event):
         index_up()
 
 def choice_dir(key_event):
-    key_event[pygame.K_UP] = 1
-    key_event[pygame.K_DOWN] = 1
-    key_event[pygame.K_LEFT] = 1
-    key_event[pygame.K_RIGHT] = 1
+    
+    a = random.randint(0,100)
+    
+    if a < 10:
+        key_event[pygame.K_DOWN] = 1
+        return key_event
+    
+    if a > 50:
+        key_event[pygame.K_UP] = 1
+        return key_event
+    
+    print(str(index)+" - pos : "+str(item[index].pos[1]))
+    print(str(index)+" - des : "+str(item[index].des-1))
+        
+    if item[index].des-1 < item[index].pos[1]:
+        key_event[pygame.K_LEFT] = 1
+    elif item[index].des-1 > item[index].pos[1]:
+        key_event[pygame.K_RIGHT] = 1
+    elif item[index].des-1 == item[index].pos[1]:
+        key_event[pygame.K_UP] = 1
     return key_event
 
 def draw_screen():
@@ -109,7 +127,7 @@ def draw_screen():
 
 clock = pygame.time.Clock()
 while True:
-    clock.tick(60)
+    clock.tick(FPS)
 
     if remain_item <= 0:
         item_init()
@@ -125,9 +143,7 @@ while True:
             print_map[item[i].pos[0]][item[i].pos[1]] = item[i]
     
     key_event = list(pygame.key.get_pressed())
-
     key_event = choice_dir(key_event)
-
     move(key_event)
 
     screen.fill(BLACK)
